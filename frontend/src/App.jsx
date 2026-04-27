@@ -12,7 +12,7 @@ import CreateEditShop from './pages/CreateEditShop'
 import AddItem from './pages/AddItem'
 import CartPage from './pages/CartPage'
 import OrdersPage from './pages/OrdersPage'
-export const serverUrl="http://localhost:8000"
+export const serverUrl="https://vingo-backend-b4xs.onrender.com"
 const App = () => {
   useGetCurrentUser()
   useGetCity()

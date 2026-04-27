@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import axios from "axios"
 import { ClipLoader } from "react-spinners";
-const serverUrl="http://localhost:8000"
+const serverUrl="https://vingo-backend-b4xs.onrender.com"
 
 
 function ForgotPassword() {
