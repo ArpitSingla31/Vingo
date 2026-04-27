@@ -17,7 +17,7 @@ const port = process.env.PORT || 8000;
 
 // middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"],
+  origin: ["http://localhost:5173", "http://localhost:5174","https://vingo-frontend-lime.vercel.app"],
   credentials: true
 }));
 
