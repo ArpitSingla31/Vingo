@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMyShopData } from "../redux/ownerSlice";
 import { serverUrl } from "../App";
+import { setUserData } from "../redux/userSlice";
+import { clearAuthSession } from "../utils/authSession";
 
 function useGetMyShop() {
   const dispatch = useDispatch();
@@ -26,7 +28,10 @@ function useGetMyShop() {
 
         dispatch(setMyShopData(result.data));
       } catch (error) {
-        console.log(error.response?.data);
+        if (error.response?.status === 401) {
+          clearAuthSession();
+          dispatch(setUserData(null));
+        }
         dispatch(setMyShopData(null));
       }
     };

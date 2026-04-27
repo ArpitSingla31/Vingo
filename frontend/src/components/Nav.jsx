@@ -10,6 +10,7 @@ import { logoutUser, setFoodSearchTerm, setUserData } from "../redux/userSlice";
 import { serverUrl } from "../App";
 import { TbReceipt2 } from "react-icons/tb";
 import { clearCart } from "../redux/cartSlice";
+import { clearAuthSession } from "../utils/authSession";
 
 const Nav = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -32,6 +33,7 @@ const Nav = () => {
       await axios.get(`${serverUrl}/api/auth/signout`, {
         withCredentials: true,
       });
+      clearAuthSession();
       dispatch(setUserData(null));
       dispatch(logoutUser());
       dispatch(clearCart());

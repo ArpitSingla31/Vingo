@@ -3,12 +3,21 @@ import bcrypt from "bcryptjs"
 import genToken from "../utils/token.js"
 import { sendOtpMail } from "../utils/mail.js"
 
-const authCookieOptions = {
-  secure: false,
-  sameSite: "lax",
-  path: "/",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-  httpOnly: true,
+const shouldUseCrossSiteCookie = () =>
+  process.env.NODE_ENV === "production" ||
+  process.env.RENDER === "true" ||
+  process.env.FRONTEND_URL?.startsWith("https://")
+
+const getAuthCookieOptions = () => {
+  const useCrossSiteCookie = shouldUseCrossSiteCookie()
+
+  return {
+    secure: useCrossSiteCookie,
+    sameSite: useCrossSiteCookie ? "none" : "lax",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  }
 }
 export const signUp=async(req,res)=>{
   try {
@@ -33,8 +42,8 @@ export const signUp=async(req,res)=>{
       password: hashedPassword
     })
     const token = await genToken(user._id)
-    res.cookie("token",token,authCookieOptions)
-    return res.status(201).json(user)
+    res.cookie("token",token,getAuthCookieOptions())
+    return res.status(201).json({ ...user.toObject(), token })
   } catch (error) {
      return res.status(500).json(`sign up error ${error}`)
   }
@@ -53,17 +62,20 @@ export const signIn=async(req,res)=>{
   }
  
     const token = await genToken(user._id)
-    res.cookie("token",token,authCookieOptions)
-    return res.status(200).json(user)
+    res.cookie("token",token,getAuthCookieOptions())
+    return res.status(200).json({ ...user.toObject(), token })
   } catch (error) {
      return res.status(500).json(`sign In error ${error}`)
   }
 }
 export const signOut=async(req,res)=>{
   try {
+    const useCrossSiteCookie = shouldUseCrossSiteCookie()
+
     res.clearCookie("token",{
       path:"/",
-      sameSite:"lax",
+      sameSite: useCrossSiteCookie ? "none" : "lax",
+      secure: useCrossSiteCookie,
       httpOnly:true
     })
     return res.status(200).json({messsage:"log out succesfully"})
@@ -145,8 +157,8 @@ export const googleAuth=async (req,res)=>{
     }
 
       const token = await genToken(user._id)
-    res.cookie("token",token,authCookieOptions)
-    return res.status(200).json(user)
+    res.cookie("token",token,getAuthCookieOptions())
+    return res.status(200).json({ ...user.toObject(), token })
 
   } catch (error) {
      return res.status(500).json(`Google auth error ${error}`)

@@ -16,7 +16,8 @@ function ForgotPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [err,setErr]=useState("")
   const [loading,setLoading]=useState(false)
-  const handleSetOtp=async()=>{
+  const handleSetOtp=async(event)=>{
+    event.preventDefault()
     setLoading(true)
     try {
       const result=await axios.post(`${serverUrl}/api/auth/send-otp`,{email}, {withCredentials:true})
@@ -29,7 +30,8 @@ function ForgotPassword() {
       setLoading(false)
     }
   }
-   const handleVerifypOtp=async()=>{
+   const handleVerifypOtp=async(event)=>{
+    event.preventDefault()
     setLoading(true)
     try {
       const result=await axios.post(`${serverUrl}/api/auth/verify-otp`,{email,otp}, {withCredentials:true})
@@ -42,10 +44,13 @@ function ForgotPassword() {
       setLoading(false)
     }
   }
-   const handleResetPassword=async()=>{
+   const handleResetPassword=async(event)=>{
+    event.preventDefault()
     setLoading(true)
     if(newPassword!==confirmPassword){
-      return null
+      setErr("Passwords do not match")
+      setLoading(false)
+      return
     }
     try {
       const result=await axios.post(`${serverUrl}/api/auth/reset-password`,{email,newPassword}, {withCredentials:true})
@@ -76,7 +81,7 @@ function ForgotPassword() {
         </div>
 
         {step === 1 && (
-          <div>
+          <form onSubmit={handleSetOtp}>
             <div className="mb-6">
               <label className="field-label">Email</label>
 
@@ -90,16 +95,16 @@ function ForgotPassword() {
             </div>
 
             <button
-              className="brand-button w-full" onClick={handleSetOtp} disabled={loading}
+              className="brand-button w-full" type="submit" disabled={loading}
             >
             {loading?<ClipLoader size={20} color='white'/>:"Send otp"}
             </button>
                {err &&  <p className="mt-4 text-center text-sm text-red-500">{err}</p>}
-          </div>
+          </form>
         )}
 
         {step === 2 && (
-          <div>
+          <form onSubmit={handleVerifypOtp}>
             <div className="mb-6">
               <label className="field-label">OTP</label>
 
@@ -113,16 +118,16 @@ function ForgotPassword() {
             </div>
 
             <button
-              className="brand-button w-full" onClick={handleVerifypOtp} disabled={loading}
+              className="brand-button w-full" type="submit" disabled={loading}
             >
             {loading?<ClipLoader size={20} color='white'/>:"verify otp"}
             </button>
              {err &&  <p className="mt-4 text-center text-sm text-red-500">{err}</p>}
-          </div>
+          </form>
         )}
 
         {step === 3 && (
-          <div>
+          <form onSubmit={handleResetPassword}>
             <div className="mb-4">
               <label className="field-label">New Password</label>
 
@@ -148,12 +153,12 @@ function ForgotPassword() {
             </div>
 
             <button
-              className="brand-button w-full" onClick={handleResetPassword} disabled={loading}
+              className="brand-button w-full" type="submit" disabled={loading}
             >
             {loading?<ClipLoader size={20} color='white'/>:"Reset Password"}
             </button>
                 {err &&  <p className="mt-4 text-center text-sm text-red-500">{err}</p>}
-          </div>
+          </form>
         )}
 
       </div>

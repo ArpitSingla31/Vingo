@@ -7,16 +7,14 @@ import useGetCity from "../hooks/useGetCity";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../redux/ownerSlice";
 import axios from "axios";
-import useGetMyShop from "../hooks/useGetMyShop";
 
 const CreateEditShop = () => {
   useGetCity();
-  useGetMyShop();
   const navigate = useNavigate();
 
   // Redux data
   const { myShopData } = useSelector((state) => state.owner);
-  const { currentCity, currentState, currentAddress, currentCoords } = useSelector(
+  const { currentCity, currentState, currentAddress, currentCoords, userData } = useSelector(
     (state) => state.user,
   );
 
@@ -33,6 +31,7 @@ const CreateEditShop = () => {
   const shopState = formValues.shopState || myShopData?.state || currentState || "";
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -45,6 +44,13 @@ const CreateEditShop = () => {
   };
 const handleSubmit = async (e) => {
   e.preventDefault();
+  setErrorMessage("");
+
+  if (userData?.role !== "owner") {
+    setErrorMessage("Please sign in as an owner to save a shop.");
+    navigate("/signin");
+    return;
+  }
 
   try {
     const formData = new FormData();
@@ -69,8 +75,6 @@ const handleSubmit = async (e) => {
 
     const shopData = result.data.shop || result.data;
 
-    console.log("UPDATED SHOP:", shopData);
-
     // ✅ UPDATE REDUX
     dispatch(setMyShopData(shopData));
 
@@ -78,7 +82,7 @@ const handleSubmit = async (e) => {
     navigate("/");
 
   } catch (error) {
-    console.log(error);
+    setErrorMessage(error.response?.data?.message || "Unable to save shop. Please sign in again.");
   }
 };
   // Sync Redux → Local
@@ -190,6 +194,9 @@ const handleSubmit = async (e) => {
           >
             Save
           </button>
+          {errorMessage && (
+            <p className="text-center text-sm text-red-500">{errorMessage}</p>
+          )}
         </form>
       </div>
     </div>

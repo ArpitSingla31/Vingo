@@ -9,6 +9,7 @@ import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { setUserData } from "../redux/userSlice";
 import { useDispatch } from "react-redux";
+import { saveAuthSession } from "../utils/authSession";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +20,8 @@ const SignIn = () => {
   const [err,setErr]=useState("")
   const [loading,setLoading]=useState(false)
   const dispatch=useDispatch()
-  const handleSignIn = async () => {
+  const handleSignIn = async (event) => {
+  event.preventDefault();
   setLoading(true);
 
   try {
@@ -30,6 +32,7 @@ const SignIn = () => {
     );
 
     dispatch(setUserData(res.data)); // ✅ fixed
+    saveAuthSession(res.data.token);
     setErr("");
     setLoading(false);
 
@@ -54,9 +57,9 @@ const SignIn = () => {
         mobile: "0000000000",
       },{withCredentials:true})
       dispatch(setUserData(data))
+      saveAuthSession(data.token);
       navigate("/")
     } catch (error) {
-      console.log(error);
       setErr(error.response?.data?.message || error.message || "Google sign in failed.");
     } finally {
       setLoading(false);
@@ -72,6 +75,7 @@ const SignIn = () => {
           Pick up where you left off and jump back into orders, shops, and deliveries.
         </p>
 
+        <form onSubmit={handleSignIn}>
         <div className="mt-8">
           <label className="field-label">Email</label>
           <input
@@ -114,14 +118,16 @@ const SignIn = () => {
 
         <button
           className="brand-button mt-5 w-full"
-          onClick={handleSignIn} disabled={loading}
+          type="submit"
+          disabled={loading}
         >
           {loading?<ClipLoader size={20} color='white' />:"Sign In"}
         </button>
+        </form>
 
         {err &&  <p className="mt-4 text-center text-sm text-red-500">{err}</p>}
 
-        <button className="ghost-button mt-4 w-full gap-2" onClick={handleGoogleAuth}>
+        <button type="button" className="ghost-button mt-4 w-full gap-2" onClick={handleGoogleAuth}>
           <FcGoogle size={20} />
           <span>Sign in with Google</span>
         </button>

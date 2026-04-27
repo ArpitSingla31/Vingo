@@ -9,6 +9,7 @@ import { auth } from "../../firebase"; // ✅ IMPORTANT
 import { ClipLoader } from "react-spinners"
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { saveAuthSession } from "../utils/authSession";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("user");
@@ -24,7 +25,8 @@ const SignUp = () => {
   const dispatch=useDispatch()
 
   // ✅ Signup
-  const handleSignup = async () => {
+  const handleSignup = async (event) => {
+    event.preventDefault()
     setLoading(true)
     try {
       const res = await axios.post(
@@ -33,8 +35,8 @@ const SignUp = () => {
         { withCredentials: true }
       );
 
-      console.log(res.data);
       dispatch(setUserData(res.data))
+      saveAuthSession(res.data.token)
       setErr("")
       setLoading(false)
      
@@ -50,15 +52,13 @@ const SignUp = () => {
     return setErr("Mobile number is required")
     }
     
-    
+    try {
+      setLoading(true)
+      setErr("")
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       const result = await signInWithPopup(auth, provider);
 
-      console.log(result.user.displayName);
- try{
-  setLoading(true)
-  setErr("")
   const {data}=await axios.post(`${serverUrl}/api/auth/google-auth`,{
     fullName:result.user.displayName,
     email:result.user.email,
@@ -67,10 +67,9 @@ const SignUp = () => {
 
   },{withCredentials:true})
     dispatch(setUserData(data))
+    saveAuthSession(data.token)
     navigate("/")
-  console.log(data)
     } catch (error) {
-      console.log(error);
       setErr(error.response?.data?.message || error.message || "Google sign up failed.")
     } finally {
       setLoading(false)
@@ -86,6 +85,7 @@ const SignUp = () => {
           Create one account for ordering, managing your restaurant, or delivering on the go.
         </p>
 
+        <form onSubmit={handleSignup}>
         <div className="mt-8">
           <label className="field-label">Full name</label>
           <input
@@ -129,6 +129,7 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button
+            type="button"
             className="absolute right-4 top-[45px] text-slate-400"
             onClick={() => setShowPassword(!showPassword)}
           >
@@ -156,10 +157,12 @@ const SignUp = () => {
 
         <button
           className="brand-button mt-6 w-full"
-          onClick={handleSignup} disabled={loading}
+          type="submit"
+          disabled={loading}
         >
           {loading?<ClipLoader size={20} color='white' />:"Sign Up"}
         </button>
+        </form>
 
         {err &&  <p className="mt-4 text-center text-sm text-red-500">{err}</p>}
 

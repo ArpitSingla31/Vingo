@@ -30,8 +30,8 @@ const OrdersPage = () => {
           { withCredentials: true }
         );
         setOrders(result.data);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        setOrders([]);
       } finally {
         setLoading(false);
       }

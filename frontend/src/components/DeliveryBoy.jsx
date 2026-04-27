@@ -25,7 +25,6 @@ const DeliveryBoy = () => {
       });
       setOrders(result.data);
     } catch (error) {
-      console.log(error);
       setErrorMessage(
         error.response?.data?.message || "Failed to refresh delivery orders."
       );
@@ -57,7 +56,6 @@ const DeliveryBoy = () => {
       setSuccessMessage("Order assigned successfully.");
       await fetchOrders();
     } catch (error) {
-      console.log(error);
       setErrorMessage(
         error.response?.data?.message || "Failed to assign this order."
       );
@@ -79,7 +77,6 @@ const DeliveryBoy = () => {
       setSuccessMessage(`Order updated to ${status.replaceAll("_", " ")}.`);
       await fetchOrders();
     } catch (error) {
-      console.log(error);
       setErrorMessage(
         error.response?.data?.message || "Failed to update order status."
       );
@@ -110,7 +107,6 @@ const DeliveryBoy = () => {
         setSuccessMessage("Live location shared successfully.");
         await fetchOrders();
       } catch (error) {
-        console.log(error);
         setErrorMessage(
           error.response?.data?.message || "Failed to share live location."
         );

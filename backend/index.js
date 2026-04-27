@@ -14,10 +14,16 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8000;
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://vingo-frontend-lime.vercel.app",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
 
 // middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174","https://vingo-frontend-lime.vercel.app"],
+  origin: allowedOrigins,
   credentials: true
 }));
 

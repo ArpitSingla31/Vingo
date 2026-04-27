@@ -12,7 +12,9 @@ import CreateEditShop from './pages/CreateEditShop'
 import AddItem from './pages/AddItem'
 import CartPage from './pages/CartPage'
 import OrdersPage from './pages/OrdersPage'
+import { restoreAuthSession } from './utils/authSession'
 export const serverUrl="https://vingo-backend-b4xs.onrender.com"
+restoreAuthSession()
 const App = () => {
   useGetCurrentUser()
   useGetCity()
