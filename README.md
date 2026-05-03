@@ -104,7 +104,17 @@ JWT_SECRET=your_secret_key
 
 ## 📸 Screenshots
 
-(Add screenshots of your app here)
+<img width="1889" height="864" alt="Screenshot 2026-04-17 154700" src="https://github.com/user-attachments/assets/c50f33ef-be67-4046-8b43-3f8bbc830b7b" />
+
+
+<img width="119" height="92" alt="Screenshot 2026-04-17 155236" src="https://github.com/user-attachments/assets/45efbd12-8c3c-4b82-ace4-94d06e8f04d0" />
+
+<img width="1883" height="835" alt="Screenshot 2026-04-17 154916" src="https://github.com/user-attachments/assets/2eca3144-240e-4856-b136-58671bf08b32" />
+
+
+<img width="650" height="925" alt="Screenshot 2026-04-17 154830" src="https://github.com/user-attachments/assets/a186cf90-fb07-48a2-8f7c-2bee7bb800ef" />
+
+
 
 ---
 
