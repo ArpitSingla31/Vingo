@@ -131,8 +131,8 @@ JWT_SECRET=your_secret_key
 
 **Arpit Singla**
 
-* LinkedIn: https://linkedin.com/in/yourprofile
-* GitHub: https://github.com/yourusername
+* LinkedIn: https://in.linkedin.com/in/arpit-singla-260ba4384
+* GitHub: https://github.com/ArpitSingla31
 
 ---
 
